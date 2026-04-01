@@ -6,81 +6,42 @@
 
 <div class="container-fluid px-3 mt-4">
     <article>
-        <!-- En-tête de l'article -->
         <h1 class="section-title mb-4" style="font-size: 2.2rem; font-weight: 700; color: #1a202c;">
             <i class="fas fa-pen-fancy me-2" style="color: #4a90a4; font-size: 1.8rem;"></i>
             {{ article.title|striptags }}
         </h1>
 
-        <!-- Métadonnées -->
-        {% if site_profile.blog_show_author_detail or site_profile.blog_show_profession_detail or site_profile.blog_show_publish_date_detail or site_profile.blog_show_update_date_detail %}
-        <div class="section-intro mb-4">
-            <div class="meta-info-group">
-                {% if site_profile.blog_show_author_detail or site_profile.blog_show_profession_detail %}
-                <div class="meta-info-item meta-author">
-                    <i class="fas fa-user-circle" style="color: #2c5282;"></i>
-                    {% if site_profile.blog_show_author_detail %}
-                        <a href="mailto:{{ article.author_email }}" style="color: #2c5282; text-decoration: none; font-weight: 600;"
-                           onmouseover="this.style.textDecoration='underline'"
-                           onmouseout="this.style.textDecoration='none'">{{ article.author_name }}</a>
-                    {% endif %}
-                </div>
-                {% if site_profile.blog_show_author_detail and site_profile.blog_show_profession_detail and article.author_profession %}
-                <div class="meta-info-item meta-profession">
-                    <span>{{ article.author_profession }}</span>
-                </div>
-                {% endif %}
-                {% endif %}
-                {% if site_profile.blog_show_publish_date_detail and article.published_at %}
-                <div class="meta-info-item meta-date">
-                    <i class="fas fa-calendar-alt" style="color: #2c5282;"></i>
-                    <span>{{ article.published_at|date:"d M Y" }}</span>
-                </div>
-                {% endif %}
-                {% if site_profile.blog_show_update_date_detail and article.updated_at %}
-                <div class="meta-info-item meta-date">
-                    <i class="fas fa-sync-alt" style="color: #2c5282;"></i>
-                    <span>{{ article.updated_at|date:"d M Y" }}</span>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        {% endif %}
+        {% include 'includes/content_detail_meta_card.html' with item=article show_author=site_profile.blog_show_author_detail show_author_profession=site_profile.blog_show_profession_detail show_date=site_profile.blog_show_publish_date_detail show_update_date=site_profile.blog_show_update_date_detail %}
 
-        <!-- Image principale -->
         {% if article.main_image %}
         <div class="mb-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
             <img src="{{ article.main_image.url }}" alt="{{ article.title }}" style="width: 100%; height: auto; display: block;">
         </div>
         {% endif %}
 
-        <!-- Résumé -->
         <div class="mb-4">
             <p class="lead" style="font-size: 1.15rem; line-height: 1.7; color: #475569;">{{ article.resume|safe }}</p>
         </div>
 
-        <!-- Séparateur -->
         <div style="height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(74, 144, 164, 0.2) 50%, transparent 100%); margin: 2.5rem 0;"></div>
 
-        <!-- Contenu complet -->
         <div class="mb-5">
             <div class="content-body" style="line-height: 1.8; color: #475569;">
                 {{ article.content|safe }}
             </div>
         </div>
 
-        <!-- Bouton retour -->
         <div class="mt-5 mb-4">
             {% if site_profile and site_profile.first_name and site_profile.last_name and site_profile.profession %}
-                <a href="{% url 'profile_blogue_list' nom=site_profile|profile_nom_slug profession=site_profile|profile_profession_slug %}" 
-                   class="btn btn-custom-outline" 
+                <a href="{% url 'profile_blogue_list' nom=site_profile|profile_nom_slug profession=site_profile|profile_profession_slug %}"
+                   class="btn btn-custom-outline"
                    style="display: inline-flex; align-items: center; gap: 8px; padding: 0.6rem 1.3rem; font-size: 0.95rem; border-radius: 10px;">
                     <i class="fas fa-arrow-left" style="font-size: 0.85rem;"></i>
                     {{ site_profile.blog_back_button_text }}
                 </a>
             {% else %}
-                <a href="{% url 'blogue_list' %}" 
-                   class="btn btn-custom-outline" 
+                <a href="{% url 'blogue_list' %}"
+                   class="btn btn-custom-outline"
                    style="display: inline-flex; align-items: center; gap: 8px; padding: 0.6rem 1.3rem; font-size: 0.95rem; border-radius: 10px;">
                     <i class="fas fa-arrow-left" style="font-size: 0.85rem;"></i>
                     {{ site_profile.blog_back_button_text }}

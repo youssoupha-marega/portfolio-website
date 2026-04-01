@@ -8,3 +8,5 @@ venv/
 venv/*
 .venv/
 .venv/*
+
+portfolio-website-3.12.venv/

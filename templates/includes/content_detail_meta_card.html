@@ -1,0 +1,152 @@
+{% load utils %}
+
+{% with inline_stack_items=item|project_stack_items %}
+{% if show_author or show_date or show_update_date or item.domaine or inline_stack_items or item.stack or item.statut %}
+<div class="section-intro mb-4" style="padding: 1.25rem 1.3rem; border: 1px solid rgba(203, 213, 225, 0.7); border-radius: 18px; background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%); box-shadow: 0 6px 24px rgba(15, 23, 42, 0.04);">
+    {% if show_author or show_date or show_update_date %}
+    <div class="meta-info-group">
+        {% if show_author %}
+        <div class="meta-info-item meta-author">
+            <i class="fas fa-user-circle" style="color: #2c5282;"></i>
+            <a href="mailto:{{ item.author_email }}" style="color: #2c5282; text-decoration: none; font-weight: 600;"
+               onmouseover="this.style.textDecoration='underline'"
+               onmouseout="this.style.textDecoration='none'">{{ item.author_name }}</a>
+        </div>
+        {% if show_author_profession and item.author_profession %}
+        <div class="meta-info-item meta-profession">
+            <span>{{ item.author_profession }}</span>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% if show_date and item.published_at %}
+        <div class="meta-info-item meta-date">
+            <i class="fas fa-calendar-alt" style="color: #2c5282;"></i>
+            <span>{{ item.published_at|date:"d M Y" }}</span>
+        </div>
+        {% endif %}
+        {% if show_update_date and item.updated_at %}
+        <div class="meta-info-item meta-date">
+            <i class="fas fa-sync-alt" style="color: #2c5282;"></i>
+            <span>{{ item.updated_at|date:"d M Y" }}</span>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if show_author or show_date or show_update_date %}
+    {% if item.domaine or inline_stack_items or item.stack or item.statut %}
+    <div style="height: 1px; background: rgba(148, 163, 184, 0.24); margin: 1rem 0 1.05rem;"></div>
+    {% endif %}
+    {% endif %}
+
+    {% if item.domaine or inline_stack_items or item.stack or item.statut %}
+    <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+        {% if item.statut %}
+        <div>
+            <span style="
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.45rem 0.9rem;
+                border-radius: 999px;
+                font-weight: 700;
+                font-size: 0.76rem;
+                line-height: 1;
+                white-space: nowrap;
+                {% if item.statut == 'planning' %}
+                background: rgba(59, 130, 246, 0.12);
+                color: #1d4ed8;
+                {% elif item.statut == 'in_progress' %}
+                background: rgba(245, 158, 11, 0.14);
+                color: #b45309;
+                {% elif item.statut == 'paused' %}
+                background: rgba(249, 115, 22, 0.14);
+                color: #c2410c;
+                {% elif item.statut == 'deployed' or item.statut == 'completed' %}
+                background: rgba(132, 204, 22, 0.14);
+                color: #4d7c0f;
+                {% elif item.statut == 'archived' %}
+                background: rgba(161, 161, 170, 0.16);
+                color: #52525b;
+                {% else %}
+                background: rgba(226, 232, 240, 0.8);
+                color: #475569;
+                {% endif %}
+            ">
+                {{ item.get_statut_display }}
+            </span>
+        </div>
+        {% endif %}
+
+        {% if item.domaine %}
+        <div style="color: #5b6472; font-size: 1rem; line-height: 1.5;">
+            {% for domaine in item.domaine|split_csv %}
+                <span>{{ domaine }}</span>{% if not forloop.last %} <span style="color: #94a3b8;">|</span> {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if inline_stack_items %}
+        <div>
+            <div style="font-size: 0.82rem; font-weight: 800; letter-spacing: 0.05em; color: #6b7280; margin-bottom: 0.8rem;">
+                STACK
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                {% for stack_item in inline_stack_items %}
+                <span style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.45rem;
+                    padding: 0.42rem 0.8rem;
+                    min-height: 42px;
+                    border-radius: 12px;
+                    background: #f8fafc;
+                    border: 1px solid #dbe4ee;
+                    color: #4b5563;
+                    font-weight: 500;
+                    font-size: 0.98rem;
+                    font-family: inherit;
+                    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+                ">
+                    {% if stack_item.icon %}
+                    <span style="width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 24px;">
+                        <img src="{{ stack_item.icon.url }}" alt="{{ stack_item.name }}" style="width: 24px; height: 24px; object-fit: contain; display: block;">
+                    </span>
+                    {% endif %}
+                    <span style="display: inline-flex; align-items: center; min-height: 24px; line-height: 1;">{{ stack_item.name }}</span>
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+        {% elif item.stack %}
+        <div>
+            <div style="font-size: 0.82rem; font-weight: 800; letter-spacing: 0.05em; color: #6b7280; margin-bottom: 0.8rem;">
+                STACK
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                {% for stack_item in item.stack|split_csv %}
+                <span style="
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 0.42rem 0.8rem;
+                    min-height: 42px;
+                    border-radius: 12px;
+                    background: #f8fafc;
+                    border: 1px solid #dbe4ee;
+                    color: #4b5563;
+                    font-weight: 500;
+                    font-size: 0.98rem;
+                    font-family: inherit;
+                    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+                ">
+                    {{ stack_item }}
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endwith %}

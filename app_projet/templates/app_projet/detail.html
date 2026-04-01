@@ -6,81 +6,42 @@
 
 <div class="container-fluid px-3 mt-4">
     <article>
-        <!-- Titre du projet -->
         <h1 class="section-title mb-4" style="font-size: 2.2rem; font-weight: 700; color: #1a202c;">
             <i class="fas fa-rocket me-2" style="color: #2c5282; font-size: 1.8rem;"></i>
             {{ projet.title|striptags }}
         </h1>
 
-        <!-- Métadonnées du projet -->
-        {% if site_profile.projects_show_author_detail or site_profile.projects_show_profession_detail or site_profile.projects_show_publish_date_detail or site_profile.projects_show_update_date_detail %}
-        <div class="section-intro mb-4">
-            <div class="meta-info-group">
-                {% if site_profile.projects_show_author_detail or site_profile.projects_show_profession_detail %}
-                <div class="meta-info-item meta-author">
-                    <i class="fas fa-user-circle" style="color: #2c5282;"></i>
-                    {% if site_profile.projects_show_author_detail %}
-                        <a href="mailto:{{ projet.author_email }}" style="color: #2c5282; text-decoration: none; font-weight: 600;"
-                           onmouseover="this.style.textDecoration='underline'"
-                           onmouseout="this.style.textDecoration='none'">{{ projet.author_name }}</a>
-                    {% endif %}
-                </div>
-                {% if site_profile.projects_show_author_detail and site_profile.projects_show_profession_detail and projet.author_profession %}
-                <div class="meta-info-item meta-profession">
-                    <span>{{ projet.author_profession }}</span>
-                </div>
-                {% endif %}
-                {% endif %}
-                {% if site_profile.projects_show_publish_date_detail and projet.published_at %}
-                <div class="meta-info-item meta-date">
-                    <i class="fas fa-calendar-alt" style="color: #2c5282;"></i>
-                    <span>{{ projet.published_at|date:"d M Y" }}</span>
-                </div>
-                {% endif %}
-                {% if site_profile.projects_show_update_date_detail and projet.updated_at %}
-                <div class="meta-info-item meta-date">
-                    <i class="fas fa-sync-alt" style="color: #2c5282;"></i>
-                    <span>{{ projet.updated_at|date:"d M Y" }}</span>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        {% endif %}
+        {% include 'includes/content_detail_meta_card.html' with item=projet show_author=site_profile.projects_show_author_detail show_author_profession=site_profile.projects_show_profession_detail show_date=site_profile.projects_show_publish_date_detail show_update_date=site_profile.projects_show_update_date_detail %}
 
-        <!-- Image principale -->
         {% if projet.main_image %}
         <div class="mb-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
             <img src="{{ projet.main_image.url }}" alt="{{ projet.title }}" style="width: 100%; height: auto; display: block;">
         </div>
         {% endif %}
 
-        <!-- Résumé -->
         <div class="mb-4">
             <p class="lead" style="font-size: 1.15rem; line-height: 1.7; color: #475569;">{{ projet.resume|safe }}</p>
         </div>
 
-        <!-- Séparateur -->
         <div style="height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(44, 82, 130, 0.2) 50%, transparent 100%); margin: 2.5rem 0;"></div>
 
-        <!-- Contenu complet -->
         <div class="mb-5">
             <div class="content-body" style="line-height: 1.8; color: #475569;">
                 {{ projet.content|safe }}
             </div>
         </div>
 
-        <!-- Bouton retour -->
         <div class="mt-5 mb-4">
             {% if site_profile and site_profile.first_name and site_profile.last_name and site_profile.profession %}
-                <a href="{% url 'profile_projet_list' nom=site_profile|profile_nom_slug profession=site_profile|profile_profession_slug %}" 
-                   class="btn btn-custom-outline" 
+                <a href="{% url 'profile_projet_list' nom=site_profile|profile_nom_slug profession=site_profile|profile_profession_slug %}"
+                   class="btn btn-custom-outline"
                    style="display: inline-flex; align-items: center; gap: 8px; padding: 0.6rem 1.3rem; font-size: 0.95rem; border-radius: 10px;">
                     <i class="fas fa-arrow-left" style="font-size: 0.85rem;"></i>
                     {{ site_profile.projects_back_button_text }}
                 </a>
             {% else %}
-                <a href="{% url 'projet_list' %}" 
-                   class="btn btn-custom-outline" 
+                <a href="{% url 'projet_list' %}"
+                   class="btn btn-custom-outline"
                    style="display: inline-flex; align-items: center; gap: 8px; padding: 0.6rem 1.3rem; font-size: 0.95rem; border-radius: 10px;">
                     <i class="fas fa-arrow-left" style="font-size: 0.85rem;"></i>
                     {{ site_profile.projects_back_button_text }}

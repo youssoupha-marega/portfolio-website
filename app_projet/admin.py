@@ -1,42 +1,60 @@
+from django import forms
 from django.contrib import admin
-from .models import Project
+
+from .models import Project, ProjectStackItem
+
+
+class ProjectStackItemInline(admin.TabularInline):
+    model = ProjectStackItem
+    extra = 1
+    fields = ("name", "icon", "order")
+    verbose_name = "Technologie"
+    verbose_name_plural = "Technologies / Logos de stack"
+
+
+class ProjectAdminForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = "__all__"
+
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author_name', 'published_at', 'updated_at')
-    list_filter = ('published_at', 'author_name')
-    search_fields = ('title', 'resume', 'content')
-    prepopulated_fields = {'slug': ('title',)}
-    date_hierarchy = 'published_at'
-    ordering = ('-published_at',)
-    
+    form = ProjectAdminForm
+    inlines = [ProjectStackItemInline]
+    list_display = ("title", "statut", "author_name", "published_at", "updated_at")
+    list_filter = ("published_at", "author_name", "statut")
+    search_fields = ("title", "resume", "content")
+    prepopulated_fields = {"slug": ("title",)}
+    date_hierarchy = "published_at"
+    ordering = ("-published_at",)
+
     fieldsets = (
-        ('Informations principales', {
-            'fields': ('title', 'slug', 'resume')
-        }),
-        ('Contenu', {
-            'fields': ('content', 'main_image')
-        }),
-        ('Liens', {
-            'fields': ('github_url', 'demo_url')
-        }),
-        ('Auteur', {
-            'fields': ('author_name', 'author_email', 'author_profession')
-        }),
-        ('Dates', {
-            'fields': ('published_at', 'created_at', 'updated_at'),
-            'classes': ('collapse',)
-        }),
+        (
+            "Informations principales",
+            {
+                "fields": ("title", "slug", "resume", "domaine", "statut"),
+                "description": "Ajoute ensuite les technologies et leurs logos dans le tableau inline plus bas.",
+            },
+        ),
+        ("Contenu", {"fields": ("content", "main_image")}),
+        ("Liens", {"fields": ("github_url", "demo_url")}),
+        ("Auteur", {"fields": ("author_name", "author_email", "author_profession")}),
+        (
+            "Dates",
+            {
+                "fields": ("published_at", "created_at", "updated_at"),
+                "classes": ("collapse",),
+            },
+        ),
     )
-    
+
     def get_prepopulated_fields(self, request, obj=None):
-        """Désactive prepopulated_fields en édition."""
-        if obj:  # En édition, pas de prepopulated
+        if obj:
             return {}
-        return self.prepopulated_fields  # Création, prepopulated actif
-    
+        return self.prepopulated_fields
+
     def get_readonly_fields(self, request, obj=None):
-        """Slug readonly en édition, dates toujours readonly."""
-        if obj:  # En édition - slug devient readonly
-            return ('slug', 'created_at', 'updated_at', 'published_at')
-        return ('created_at', 'updated_at', 'published_at')  # Création - slug éditable via prepopulated
+        if obj:
+            return ("slug", "created_at", "updated_at", "published_at")
+        return ("created_at", "updated_at", "published_at")

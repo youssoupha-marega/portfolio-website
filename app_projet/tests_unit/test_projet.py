@@ -114,6 +114,25 @@ class ProjectListViewTest(TestCase):
         self.assertEqual(len(projets), 2)
         self.assertGreaterEqual(projets[0].created_at, projets[1].created_at)
 
+    def test_list_view_renders_github_and_demo_buttons_when_links_exist(self):
+        """Tester que les boutons GitHub et Démo apparaissent quand les URLs sont renseignées."""
+        project = Project.objects.create(
+            title="Project With Links",
+            resume="Resume with links",
+            content="Content with links",
+            author_name="Author",
+            author_email="test@example.com",
+            author_profession="Dev",
+            github_url="https://github.com/test/project-with-links",
+            demo_url="https://demo.example.com/project-with-links",
+        )
+
+        response = self.client.get(reverse('projet_list'))
+
+        self.assertContains(response, project.title)
+        self.assertContains(response, 'href="https://github.com/test/project-with-links"', html=True)
+        self.assertContains(response, 'href="https://demo.example.com/project-with-links"', html=True)
+
 
 class ProjectDetailViewTest(TestCase):
     """Tests pour la vue de détail d'un projet (racine)."""
