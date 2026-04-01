@@ -130,8 +130,8 @@ class ProjectListViewTest(TestCase):
         response = self.client.get(reverse('projet_list'))
 
         self.assertContains(response, project.title)
-        self.assertContains(response, 'href="https://github.com/test/project-with-links"', html=True)
-        self.assertContains(response, 'href="https://demo.example.com/project-with-links"', html=True)
+        self.assertContains(response, 'href="https://github.com/test/project-with-links"')
+        self.assertContains(response, 'href="https://demo.example.com/project-with-links"')
 
 
 class ProjectDetailViewTest(TestCase):
