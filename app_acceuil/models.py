@@ -119,6 +119,15 @@ class SiteProfile(models.Model):
 	services_detail_button_text = models.CharField(max_length=100, default="En savoir plus", verbose_name=_("Texte bouton détail service"))
 	services_back_button_text = models.CharField(max_length=100, default="Retour aux services", verbose_name=_("Texte bouton retour services"))
 	services_calendly_button_text = models.CharField(max_length=100, default="Prendre rendez-vous", verbose_name=_("Texte bouton Calendly"))
+	services_page_enabled = models.BooleanField(
+		default=True,
+		verbose_name=_("Pages liste et détail des services actives"),
+		help_text=_(
+			"Décocher pour désactiver les pages /services/ et /services/<slug>/. "
+			"Le lien 'Services' dans la navbar et les boutons 'En savoir plus' renverront "
+			"vers la section #services de la page d'accueil."
+		),
+	)
 
 	# Images optionnelles pour les sections Projets, Blog, Services (Accueil et pages)
 	projects_home_image = models.ImageField(upload_to="section_images/", blank=True, null=True, verbose_name=_("Image section Projets (Accueil)"))

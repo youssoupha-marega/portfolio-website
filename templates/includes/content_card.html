@@ -28,7 +28,16 @@ Composant reutilisable pour afficher une carte de contenu (projet, blog, service
                     line-height: 1;
                     white-space: nowrap;
                     flex-shrink: 0;
-                    {% if item.statut == 'planning' %}
+                    {% if item.statut == 'disponible' %}
+                    background: rgba(132, 204, 22, 0.14);
+                    color: #4d7c0f;
+                    {% elif item.statut == 'bientot_disponible' %}
+                    background: rgba(59, 130, 246, 0.12);
+                    color: #1d4ed8;
+                    {% elif item.statut == 'complet' %}
+                    background: rgba(161, 161, 170, 0.16);
+                    color: #52525b;
+                    {% elif item.statut == 'planning' %}
                     background: rgba(59, 130, 246, 0.12);
                     color: #1d4ed8;
                     {% elif item.statut == 'in_progress' %}
@@ -109,11 +118,43 @@ Composant reutilisable pour afficher une carte de contenu (projet, blog, service
         </div>
         {% endif %}
 
+        {% with livrables=item.livrables.all %}
+        {% if livrables %}
+        <div>
+            <div style="font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em; color: #94a3b8; text-transform: uppercase; margin-bottom: 0.55rem;">
+                {{ item.livrables_label|default:"Livrables" }}
+            </div>
+            <div style="border-left: 3px solid #2c5282; padding-left: 0.85rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                {% for livrable in livrables %}
+                <span style="font-size: 0.9rem; color: #475569; line-height: 1.4;">{{ livrable.contenu }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if item.duree or item.localisation %}
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.85rem; color: #6b7280; width: 100%; align-items: center;">
+            {% if item.duree %}
+            <span style="display: inline-flex; align-items: center; gap: 5px;">
+                <i class="fas fa-clock" style="font-size: 0.8rem; color: #94a3b8;"></i>
+                {{ item.duree }}
+            </span>
+            {% endif %}
+            {% if item.localisation %}
+            <span style="display: inline-flex; align-items: center; justify-content: flex-end; gap: 5px; margin-left: auto; text-align: right;">
+                <i class="fas fa-map-marker-alt" style="font-size: 0.8rem; color: #94a3b8;"></i>
+                {{ item.localisation }}
+            </span>
+            {% endif %}
+        </div>
+        {% endif %}
+
         {% with inline_stack_items=item|project_stack_items %}
         {% if inline_stack_items %}
         <div>
-            <div style="font-size: 0.82rem; font-weight: 800; letter-spacing: 0.05em; color: #6b7280; margin-bottom: 0.8rem;">
-                STACK
+            <div style="font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em; color: #94a3b8; text-transform: uppercase; margin-bottom: 0.55rem;">
+                Stack
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 {% for stack_item in inline_stack_items %}
@@ -170,12 +211,14 @@ Composant reutilisable pour afficher une carte de contenu (projet, blog, service
             </a>
             {% endif %}
 
+            {% if detail_url %}
             <a href="{{ detail_url }}"
                class="btn {% if show_extra_button or item.github_url or item.demo_url %}btn-custom-outline{% else %}btn-custom-primary{% endif %} btn-sm"
                style="display: inline-flex; align-items: center; gap: 6px; padding: 0.55rem 1.1rem; font-size: 0.9rem; border-radius: 10px;">
                 {{ button_text|default:"En savoir plus" }}
                 <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
             </a>
+            {% endif %}
         </div>
     </div>
 </div>

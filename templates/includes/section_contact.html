@@ -11,25 +11,25 @@
         </h2>
     </div>
 
-    {% if site_profile.contact_intro_text %}
-    <div class="section-intro mb-4" style="max-width: 800px;">
-        {{ site_profile.contact_intro_text|safe }}
-    </div>
-    {% endif %}
-
-    <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
+    <div class="row g-4 w-100">
+        {% if site_profile.contact_intro_text %}
+        <div class="col-12">
+            <div class="section-intro mb-0" style="max-width: 100%; width: 100%;">
+                {{ site_profile.contact_intro_text|safe }}
+            </div>
+        </div>
+        {% endif %}
+        <div class="col-12">
             <div class="contact-form" style="background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); border-radius: 16px; padding: 2.5rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 16px rgba(44, 82, 130, 0.08); position: relative; overflow: hidden;">
                 <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #2c5282 0%, #4a90a4 100%);"></div>
-                
+
                 <form method="post" action="{% url 'contact' %}" id="contactForm">
                     {% csrf_token %}
-                    
+
                     <div class="row g-4">
                         <!-- Nom complet -->
                         <div class="col-md-6">
-                            <label for="name" class="form-label" style="font-weight: 700; color: #1a202c; display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem;">
-                                <i class="fas fa-user" style="color: #667eea;"></i>
+                            <label for="name" class="form-label" style="font-weight: 700; color: #1a202c; margin-bottom: 0.75rem;">
                                 {{ site_profile.contact_name_label|default:"Nom complet" }} <span style="color: #e53e3e;">*</span>
                             </label>
                             <input type="text" name="name" class="form-control" id="name" placeholder="Jean Dupont" required
@@ -40,11 +40,10 @@
 
                         <!-- Email -->
                         <div class="col-md-6">
-                            <label for="email" class="form-label" style="font-weight: 700; color: #1a202c; display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem;">
-                                <i class="fas fa-envelope" style="color: #667eea;"></i>
+                            <label for="email" class="form-label" style="font-weight: 700; color: #1a202c; margin-bottom: 0.75rem;">
                                 {{ site_profile.contact_email_label|default:"Adresse email" }} <span style="color: #e53e3e;">*</span>
                             </label>
-                            <input type="email" name="email" class="form-control" id="email" placeholder="jean.dupont@exemple.com" required
+                            <input type="email" name="email" class="form-control" id="email" placeholder="jean@exemple.com" required
                                    style="border-radius: 12px; border: 2px solid rgba(100, 116, 139, 0.15); padding: 0.85rem 1rem; transition: all 0.3s ease; font-size: 1rem;"
                                    onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 4px rgba(102, 126, 234, 0.1)'"
                                    onblur="this.style.borderColor='rgba(100, 116, 139, 0.15)'; this.style.boxShadow='none'">
@@ -52,8 +51,7 @@
 
                         <!-- Entreprise -->
                         <div class="col-md-6">
-                            <label for="company" class="form-label" style="font-weight: 700; color: #1a202c; display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem;">
-                                <i class="fas fa-building" style="color: #4a90a4;"></i>
+                            <label for="company" class="form-label" style="font-weight: 700; color: #1a202c; margin-bottom: 0.75rem;">
                                 {{ site_profile.contact_company_label|default:"Entreprise" }}
                             </label>
                             <input type="text" name="company" class="form-control" id="company" placeholder="Nom de votre entreprise"
@@ -64,8 +62,7 @@
 
                         <!-- Profession -->
                         <div class="col-md-6">
-                            <label for="profession" class="form-label" style="font-weight: 700; color: #1a202c; display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem;">
-                                <i class="fas fa-briefcase" style="color: #4a90a4;"></i>
+                            <label for="profession" class="form-label" style="font-weight: 700; color: #1a202c; margin-bottom: 0.75rem;">
                                 {{ site_profile.contact_profession_label|default:"Profession" }}
                             </label>
                             <input type="text" name="profession" class="form-control" id="profession" placeholder="Votre profession"
@@ -76,8 +73,7 @@
 
                         <!-- Objet -->
                         <div class="col-12">
-                            <label for="subject" class="form-label" style="font-weight: 700; color: #1a202c; display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem;">
-                                <i class="fas fa-tag" style="color: #2c5282;"></i>
+                            <label for="subject" class="form-label" style="font-weight: 700; color: #1a202c; margin-bottom: 0.75rem;">
                                 {{ site_profile.contact_subject_label|default:"Objet" }} <span style="color: #e53e3e;">*</span>
                             </label>
                             <input type="text" name="subject" class="form-control" id="subject" placeholder="Sujet de votre message" required
@@ -88,45 +84,42 @@
 
                         <!-- Message -->
                         <div class="col-12">
-                            <label for="message" class="form-label" style="font-weight: 700; color: #1a202c; display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem;">
-                                <i class="fas fa-comment-dots" style="color: #667eea;"></i>
-                                {{ site_profile.contact_message_label|default:"Votre message" }} <span style="color: #e53e3e;">*</span>
+                            <label for="message" class="form-label" style="font-weight: 700; color: #1a202c; margin-bottom: 0.75rem;">
+                                {{ site_profile.contact_message_label|default:"Message" }} <span style="color: #e53e3e;">*</span>
                             </label>
                             <textarea class="form-control" name="message" id="message" rows="6" placeholder="Décrivez votre projet ou vos besoins..." required
                                       style="border-radius: 12px; border: 2px solid rgba(100, 116, 139, 0.15); padding: 0.85rem 1rem; transition: all 0.3s ease; font-size: 1rem; resize: vertical;"
                                       onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 4px rgba(102, 126, 234, 0.1)'"
                                       onblur="this.style.borderColor='rgba(100, 116, 139, 0.15)'; this.style.boxShadow='none'"></textarea>
-                            <div class="mt-2" style="font-size: 0.875rem; color: #64748b; display: flex; justify-content: space-between; align-items: center;">
-                                <span><i class="fas fa-info-circle me-1"></i> Les champs marqués d'un <span style="color: #e53e3e;">*</span> sont obligatoires</span>
+                            <div class="mt-2 text-end" style="font-size: 0.875rem; color: #64748b;">
                                 <span id="charCount" style="font-weight: 600;">0 / 1000</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Bouton d'envoi -->
-                    <button type="submit" class="btn btn-custom-primary w-100 mt-4" id="submitBtn"
-                            style="padding: 1rem; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 12px; transition: all 0.3s ease;">
-                        <i class="fas fa-paper-plane"></i>
-                        <span id="btnText">{{ site_profile.contact_button_text|default:"Envoyer le message" }}</span>
-                        <span id="btnSpinner" class="spinner-border spinner-border-sm" role="status" style="display: none;">
-                            <span class="visually-hidden">Envoi en cours...</span>
-                        </span>
-                    </button>
-
-                    {% if site_profile.email %}
-                    <div class="mt-4 text-center" style="padding: 1rem; background: rgba(74, 144, 164, 0.05); border-radius: 10px; border-left: 4px solid #4a90a4;">
-                        <p class="mb-0" style="color: #475569; font-size: 0.95rem;">
-                            <i class="fas fa-envelope me-2" style="color: #4a90a4;"></i>
-                            Vous pouvez aussi me contacter directement à 
-                            <a href="mailto:{{ site_profile.email }}" style="font-weight: 700; color: #2c5282; text-decoration: none; transition: color 0.3s;"
-                               onmouseover="this.style.color='#4a90a4'" onmouseout="this.style.color='#2c5282'">
-                                {{ site_profile.email }}
-                            </a>
-                        </p>
+                    <!-- Séparateur + pied de carte -->
+                    <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+                        <span style="font-size: 0.85rem; color: #94a3b8;">* champs obligatoires</span>
+                        <button type="submit" class="btn btn-custom-primary" id="submitBtn"
+                                style="padding: 0.75rem 1.75rem; font-size: 1rem; font-weight: 700; border-radius: 12px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;">
+                            <span id="btnText">{{ site_profile.contact_button_text|default:"Envoyer le message" }} →</span>
+                            <span id="btnSpinner" class="spinner-border spinner-border-sm" role="status" style="display: none;">
+                                <span class="visually-hidden">Envoi en cours...</span>
+                            </span>
+                        </button>
                     </div>
-                    {% endif %}
                 </form>
             </div>
+
+            {% if site_profile.email %}
+            <p class="text-center mt-3" style="font-size: 0.9rem; color: #94a3b8;">
+                Ou écrivez-moi directement à
+                <a href="mailto:{{ site_profile.email }}" style="color: #2c5282; text-decoration: none; font-weight: 600;"
+                   onmouseover="this.style.color='#4a90a4'" onmouseout="this.style.color='#2c5282'">
+                    {{ site_profile.email }}
+                </a>
+            </p>
+            {% endif %}
         </div>
     </div>
 </section>
@@ -140,12 +133,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submitBtn');
     const btnText = document.getElementById('btnText');
     const btnSpinner = document.getElementById('btnSpinner');
-    
+
     if (messageField && charCount) {
         messageField.addEventListener('input', function() {
             const length = this.value.length;
             charCount.textContent = `${length} / 1000`;
-            
+
             if (length > 1000) {
                 charCount.style.color = '#e53e3e';
                 this.style.borderColor = '#e53e3e';
@@ -153,10 +146,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 charCount.style.color = '#64748b';
             }
         });
-        
+
         messageField.setAttribute('maxlength', '1000');
     }
-    
+
     // Animation d'envoi
     if (form && submitBtn) {
         form.addEventListener('submit', function() {

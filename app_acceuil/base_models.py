@@ -47,6 +47,9 @@ class PublishableContent(models.Model):
     )
 
     STATUS_CHOICES = [
+        ("disponible", _("Disponible")),
+        ("bientot_disponible", _("Bientôt disponible")),
+        ("complet", _("Complet")),
         ("planning", _("En planification")),
         ("in_progress", _("En cours")),
         ("paused", _("En pause")),
@@ -60,6 +63,15 @@ class PublishableContent(models.Model):
         blank=True,
         default="",
         verbose_name=_("Statut"),
+    )
+
+    afficher_liste = models.BooleanField(
+        default=True,
+        verbose_name=_("Afficher dans la liste"),
+    )
+    afficher_detail = models.BooleanField(
+        default=True,
+        verbose_name=_("Afficher la page de détail"),
     )
 
     published_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Date de publication"))

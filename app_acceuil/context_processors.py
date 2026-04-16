@@ -42,18 +42,28 @@ def menu_items(request):
                 items = [{"name": "acceuil", "label": "Accueil", "url": "/"}]
                 for section in ordered_sections:
                     config = section_config[section['type']]
-                    items.append({"name": config['name'], "label": config['label'], "url": config['default_path']})
+                    # Services : pointer vers #services si les pages sont désactivées
+                    if section['type'] == 'services' and not getattr(profile, 'services_page_enabled', True):
+                        url = "/#services"
+                    else:
+                        url = config['default_path']
+                    items.append({"name": config['name'], "label": config['label'], "url": url})
             else:
                 # Utiliser les paramètres dans le chemin
                 from django.utils.text import slugify
                 nom_slug = slugify(f"{profile.first_name}-{profile.last_name}")
                 profession_slug = slugify(profile.profession) if profile.profession else "profil"
                 base_path = f"/profil/nom={nom_slug}&profession={profession_slug}"
-                
+
                 items = [{"name": "profile_home", "label": "Accueil", "url": f"{base_path}/"}]
                 for section in ordered_sections:
                     config = section_config[section['type']]
-                    items.append({"name": config['profile_name'], "label": config['label'], "url": f"{base_path}{config['profile_path']}"})
+                    # Services : pointer vers la section d'accueil si les pages sont désactivées
+                    if section['type'] == 'services' and not getattr(profile, 'services_page_enabled', True):
+                        url = f"{base_path}/#services"
+                    else:
+                        url = f"{base_path}{config['profile_path']}"
+                    items.append({"name": config['profile_name'], "label": config['label'], "url": url})
         else:
             items = [
                 {"name": "acceuil", "label": "Accueil", "url": "/"},

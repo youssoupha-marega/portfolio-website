@@ -5,6 +5,7 @@ les apps projet, blog et service.
 
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from app_acceuil.models import SiteProfile
@@ -33,10 +34,10 @@ class ProfileBasedListView(ListView):
             # Utiliser les contenus associés au profil via ManyToMany
             profile_content = getattr(profile, self.profile_featured_attr, None)
             if profile_content and profile_content.exists():
-                return profile_content.all()
-        
-        # Fallback: retourner tous les items
-        return super().get_queryset().all()
+                return profile_content.filter(afficher_liste=True)
+
+        # Fallback: retourner tous les items visibles en liste
+        return super().get_queryset().filter(afficher_liste=True)
     
     def get_profile(self):
         """Récupère le profil depuis les paramètres d'URL ou le profil par défaut."""
@@ -73,6 +74,13 @@ class ProfileBasedDetailView(DetailView):
     def get_queryset(self):
         """Récupère le contenu du modèle."""
         return super().get_queryset().all()
+
+    def get_object(self, queryset=None):
+        """Retourne 404 si afficher_detail est False."""
+        obj = super().get_object(queryset)
+        if not obj.afficher_detail:
+            raise Http404
+        return obj
     
     def get_profile(self):
         """Récupère le profil depuis les paramètres d'URL ou le profil par défaut."""

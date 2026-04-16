@@ -82,22 +82,55 @@
                                 {% with is_active=True %}{% endwith %}
                             {% endif %}
                             
-                            {% if request.resolver_match.url_name == item.name or 'projets' in item.url and 'projet' in request.path or 'services' in item.url and 'service' in request.path or 'blog' in item.url and 'blog' in request.path %}
-                                <a class="nav-link active"
-                                    href="{{ item.url }}"
-                                    style="font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: #2c5282; color: white;"
-                                    onmouseover="this.style.background='#1a365d';"
-                                    onmouseout="this.style.background='#2c5282';">
-                                    {{ item.label }}
-                                </a>
+                            {% comment %}Calculer l'URL finale : si c'est le lien Services et que les pages sont désactivées, pointer vers #services{% endcomment %}
+                            {% if item.name == 'service_list' or item.name == 'profile_service_list' %}
+                                {% if site_profile and not site_profile.services_page_enabled %}
+                                    {% with nav_href="/#services" %}
+                                    <a class="nav-link"
+                                        href="{{ nav_href }}"
+                                        style="font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #4a5568;"
+                                        onmouseover="this.style.background='rgba(44, 82, 130, 0.08)'; this.style.color='#2c5282'; this.style.transform='translateY(-2px)';"
+                                        onmouseout="this.style.background='transparent'; this.style.color='#4a5568'; this.style.transform='translateY(0)';">
+                                        {{ item.label }}
+                                    </a>
+                                    {% endwith %}
+                                {% else %}
+                                    {% if request.resolver_match.url_name == item.name or 'services' in item.url and 'service' in request.path %}
+                                        <a class="nav-link active"
+                                            href="{{ item.url }}"
+                                            style="font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: #2c5282; color: white;"
+                                            onmouseover="this.style.background='#1a365d';"
+                                            onmouseout="this.style.background='#2c5282';">
+                                            {{ item.label }}
+                                        </a>
+                                    {% else %}
+                                        <a class="nav-link"
+                                            href="{{ item.url }}"
+                                            style="font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #4a5568;"
+                                            onmouseover="this.style.background='rgba(44, 82, 130, 0.08)'; this.style.color='#2c5282'; this.style.transform='translateY(-2px)';"
+                                            onmouseout="this.style.background='transparent'; this.style.color='#4a5568'; this.style.transform='translateY(0)';">
+                                            {{ item.label }}
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
                             {% else %}
-                                <a class="nav-link"
-                                    href="{{ item.url }}"
-                                    style="font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #4a5568;"
-                                    onmouseover="this.style.background='rgba(44, 82, 130, 0.08)'; this.style.color='#2c5282'; this.style.transform='translateY(-2px)';"
-                                    onmouseout="this.style.background='transparent'; this.style.color='#4a5568'; this.style.transform='translateY(0)';">
-                                    {{ item.label }}
-                                </a>
+                                {% if request.resolver_match.url_name == item.name or 'projets' in item.url and 'projet' in request.path or 'blog' in item.url and 'blog' in request.path %}
+                                    <a class="nav-link active"
+                                        href="{{ item.url }}"
+                                        style="font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: #2c5282; color: white;"
+                                        onmouseover="this.style.background='#1a365d';"
+                                        onmouseout="this.style.background='#2c5282';">
+                                        {{ item.label }}
+                                    </a>
+                                {% else %}
+                                    <a class="nav-link"
+                                        href="{{ item.url }}"
+                                        style="font-weight: 600; padding: 0.6rem 1.2rem; border-radius: 8px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #4a5568;"
+                                        onmouseover="this.style.background='rgba(44, 82, 130, 0.08)'; this.style.color='#2c5282'; this.style.transform='translateY(-2px)';"
+                                        onmouseout="this.style.background='transparent'; this.style.color='#4a5568'; this.style.transform='translateY(0)';">
+                                        {{ item.label }}
+                                    </a>
+                                {% endif %}
                             {% endif %}
                         {% endwith %}
                     </li>

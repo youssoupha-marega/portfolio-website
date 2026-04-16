@@ -22,8 +22,8 @@ class ProjectAdminForm(forms.ModelForm):
 class ProjectAdmin(admin.ModelAdmin):
     form = ProjectAdminForm
     inlines = [ProjectStackItemInline]
-    list_display = ("title", "statut", "author_name", "published_at", "updated_at")
-    list_filter = ("published_at", "author_name", "statut")
+    list_display = ("title", "statut", "afficher_liste", "afficher_detail", "author_name", "published_at", "updated_at")
+    list_filter = ("published_at", "author_name", "statut", "afficher_liste", "afficher_detail")
     search_fields = ("title", "resume", "content")
     prepopulated_fields = {"slug": ("title",)}
     date_hierarchy = "published_at"
@@ -40,6 +40,16 @@ class ProjectAdmin(admin.ModelAdmin):
         ("Contenu", {"fields": ("content", "main_image")}),
         ("Liens", {"fields": ("github_url", "demo_url")}),
         ("Auteur", {"fields": ("author_name", "author_email", "author_profession")}),
+        (
+            "Visibilité",
+            {
+                "fields": ("afficher_liste", "afficher_detail"),
+                "description": (
+                    '"Afficher dans la liste" : contrôle l\'apparition dans /projets/. '
+                    '"Afficher la page de détail" : si décoché, /projets/<slug>/ retourne une 404.'
+                ),
+            },
+        ),
         (
             "Dates",
             {

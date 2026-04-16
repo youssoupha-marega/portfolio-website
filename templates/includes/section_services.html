@@ -1,6 +1,4 @@
 {% load utils %}
-<!-- DEBUG: site_profile={{ site_profile }}, services={{ services|length }} -->
-<!-- TEST SIMPLE: {{ site_profile.services_view_all_text|default:"VIDE" }} -->
 <!-- Section Services -->
 <section id="services" class="container-fluid px-3 animate-fade-in">
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
@@ -12,12 +10,14 @@
             {% endif %}
             <span>{% if site_profile.services_home_title %}{{ site_profile.services_home_title }}{% else %}Services{% endif %}</span>
         </h2>
-        <a href="{% if site_profile.is_default %}{% url 'service_list' %}{% else %}/profil/{% profile_url_params site_profile %}/services/{% endif %}" 
-           class="btn btn-custom-outline" 
+        {% if site_profile.services_page_enabled %}
+        <a href="{% if site_profile.is_default %}{% url 'service_list' %}{% else %}/profil/{% profile_url_params site_profile %}/services/{% endif %}"
+           class="btn btn-custom-outline"
            style="font-weight: 600; padding: 0.6rem 1.3rem; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem;">
-            {% if site_profile.services_view_all_text %}{{ site_profile.services_view_all_text %}{% else %}Voir tous les services{% endif %}
+            {% if site_profile.services_view_all_text %}{{ site_profile.services_view_all_text }}{% else %}Voir tous les services{% endif %}
             <i class="fas fa-arrow-right" style="font-size: 0.85rem;"></i>
         </a>
+        {% endif %}
     </div>
     {% if site_profile.services_home_intro %}
     <div class="section-intro mb-4">
@@ -27,12 +27,16 @@
     <div class="row g-4">
         {% for service in services %}
         <div class="col-md-4">
-            {% if site_profile and site_profile.first_name and site_profile.last_name and site_profile.profession %}
-                {% url 'profile_service_detail' nom=site_profile|profile_nom_slug profession=site_profile|profile_profession_slug slug=service.slug as detail_url %}
+            {% if site_profile.services_page_enabled %}
+                {% if site_profile and site_profile.first_name and site_profile.last_name and site_profile.profession %}
+                    {% url 'profile_service_detail' nom=site_profile|profile_nom_slug profession=site_profile|profile_profession_slug slug=service.slug as detail_url %}
+                {% else %}
+                    {% url 'service_detail' slug=service.slug as detail_url %}
+                {% endif %}
+                {% include 'includes/content_card.html' with item=service detail_url=detail_url button_text=site_profile.services_detail_button_text show_extra_button=service.calendly_url extra_button_url=service.calendly_url extra_button_text=site_profile.services_calendly_button_text extra_button_target="_blank" show_image=False show_author=site_profile.services_show_author_home show_author_profession=site_profile.services_show_profession_home show_date=site_profile.services_show_publish_date_home show_update_date=site_profile.services_show_update_date_home %}
             {% else %}
-                {% url 'service_detail' slug=service.slug as detail_url %}
+                {% include 'includes/content_card.html' with item=service detail_url="" button_text="" show_extra_button=service.calendly_url extra_button_url=service.calendly_url extra_button_text=site_profile.services_calendly_button_text extra_button_target="_blank" show_image=False show_author=site_profile.services_show_author_home show_author_profession=site_profile.services_show_profession_home show_date=site_profile.services_show_publish_date_home show_update_date=site_profile.services_show_update_date_home %}
             {% endif %}
-            {% include 'includes/content_card.html' with item=service detail_url=detail_url button_text=site_profile.services_detail_button_text show_extra_button=service.calendly_url extra_button_url=service.calendly_url extra_button_text=site_profile.services_calendly_button_text extra_button_target="_blank" show_image=False show_author=site_profile.services_show_author_home show_author_profession=site_profile.services_show_profession_home show_date=site_profile.services_show_publish_date_home show_update_date=site_profile.services_show_update_date_home %}
         </div>
         {% empty %}
         <div class="col-12">
