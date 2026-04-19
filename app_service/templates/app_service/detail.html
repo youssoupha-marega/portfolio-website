@@ -6,63 +6,28 @@
 
 <div class="container-fluid px-3 mt-4">
     <article>
-        <!-- En-tête du service -->
         <h1 class="section-title mb-4" style="font-size: 2.2rem; font-weight: 700; color: #1a202c;">
-            <i class="fas fa-tools me-2" style="color: #744210; font-size: 1.8rem;"></i>
             {{ service.title|striptags }}
         </h1>
 
-        <!-- Métadonnées du service -->
-        {% if site_profile.services_show_author_detail or site_profile.services_show_profession_detail or site_profile.services_show_publish_date_detail or site_profile.services_show_update_date_detail %}
-        <div class="section-intro mb-4">
-            <div class="meta-info-group">
-                {% if site_profile.services_show_author_detail or site_profile.services_show_profession_detail %}
-                <div class="meta-info-item meta-author">
-                    <i class="fas fa-user-circle" style="color: #2c5282;"></i>
-                    {% if site_profile.services_show_author_detail %}
-                        <a href="mailto:{{ service.author_email }}" style="color: #2c5282; text-decoration: none; font-weight: 600;"
-                           onmouseover="this.style.textDecoration='underline'"
-                           onmouseout="this.style.textDecoration='none'">{{ service.author_name }}</a>
-                    {% endif %}
-                </div>
-                {% if site_profile.services_show_author_detail and site_profile.services_show_profession_detail and service.author_profession %}
-                <div class="meta-info-item meta-profession">
-                    <span>{{ service.author_profession }}</span>
-                </div>
-                {% endif %}
-                {% endif %}
-                {% if site_profile.services_show_publish_date_detail and service.published_at %}
-                <div class="meta-info-item meta-date">
-                    <i class="fas fa-calendar-alt" style="color: #2c5282;"></i>
-                    <span>{{ service.published_at|date:"d M Y" }}</span>
-                </div>
-                {% endif %}
-                {% if site_profile.services_show_update_date_detail and service.updated_at %}
-                <div class="meta-info-item meta-date">
-                    <i class="fas fa-sync-alt" style="color: #2c5282;"></i>
-                    <span>{{ service.updated_at|date:"d M Y" }}</span>
-                </div>
-                {% endif %}
-            </div>
+        {% include 'includes/content_detail_meta_card.html' with item=service show_author=site_profile.services_show_author_detail show_author_profession=site_profile.services_show_profession_detail show_date=site_profile.services_show_publish_date_detail show_update_date=site_profile.services_show_update_date_detail %}
+
+        {% include 'includes/detail_hero_media.html' with image=service.main_image alt=service.title fit_mode='cover' %}
+
+        {% if service.resume %}
+        <div class="mb-4">
+            {{ service.resume|safe }}
         </div>
         {% endif %}
 
-        <!-- Résumé -->
-        <div class="mb-4">
-            <p class="lead" style="font-size: 1.15rem; line-height: 1.7; color: #475569;">{{ service.resume|safe }}</p>
-        </div>
-
-        <!-- Séparateur -->
         <div style="height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(44, 82, 130, 0.2) 50%, transparent 100%); margin: 2.5rem 0;"></div>
 
-        <!-- Description complète -->
         <div class="mb-5">
             <div class="content-body" style="line-height: 1.8; color: #475569;">
                 {{ service.content|safe }}
             </div>
         </div>
 
-        <!-- Zone de call-to-action -->
         <div class="mb-5" style="background: rgba(44, 82, 130, 0.03); border: 1px solid rgba(44, 82, 130, 0.15); border-radius: 10px; padding: 3rem 2rem; text-align: center;">
             <h3 class="h4 mb-3" style="font-weight: 700; color: #1a202c;">
                 <i class="fas fa-hand-point-right me-2" style="color: #2c5282;"></i>
@@ -72,23 +37,23 @@
 
             <div class="d-flex justify-content-center gap-3 flex-wrap">
                 {% if service.calendly_url %}
-                <a href="{{ service.calendly_url }}" target="_blank" 
-                   class="btn btn-custom-primary" 
+                <a href="{{ service.calendly_url }}" target="_blank"
+                   class="btn btn-custom-primary"
                    style="display: inline-flex; align-items: center; gap: 8px; padding: 0.75rem 1.75rem; font-size: 1rem; border-radius: 10px;">
                     <i class="fas fa-calendar-check"></i>
                     Prendre rendez-vous
                 </a>
                 {% endif %}
                 {% if site_profile and site_profile.email %}
-                <a href="mailto:{{ site_profile.email }}?subject={{ service.title|urlencode }}" 
-                   class="btn btn-custom-outline" 
+                <a href="mailto:{{ site_profile.email }}?subject={{ service.title|urlencode }}"
+                   class="btn btn-custom-outline"
                    style="display: inline-flex; align-items: center; gap: 8px; padding: 0.75rem 1.75rem; font-size: 1rem; border-radius: 10px;">
                     <i class="fas fa-envelope"></i>
                     M'envoyer un email
                 </a>
                 {% else %}
-                <a href="{% url 'contact' %}" 
-                   class="btn btn-custom-outline" 
+                <a href="{% url 'contact' %}"
+                   class="btn btn-custom-outline"
                    style="display: inline-flex; align-items: center; gap: 8px; padding: 0.75rem 1.75rem; font-size: 1rem; border-radius: 10px;">
                     <i class="fas fa-envelope"></i>
                     M'envoyer un email
@@ -97,18 +62,17 @@
             </div>
         </div>
 
-        <!-- Bouton retour -->
         <div class="mt-5 mb-4">
             {% if site_profile and site_profile.first_name and site_profile.last_name and site_profile.profession %}
-                <a href="{% url 'profile_service_list' nom=site_profile|profile_nom_slug profession=site_profile|profile_profession_slug %}" 
-                   class="btn btn-custom-outline" 
+                <a href="{% url 'profile_service_list' nom=site_profile|profile_nom_slug profession=site_profile|profile_profession_slug %}"
+                   class="btn btn-custom-outline"
                    style="display: inline-flex; align-items: center; gap: 8px; padding: 0.6rem 1.3rem; font-size: 0.95rem; border-radius: 10px;">
                     <i class="fas fa-arrow-left" style="font-size: 0.85rem;"></i>
                     {{ site_profile.services_back_button_text }}
                 </a>
             {% else %}
-                <a href="{% url 'service_list' %}" 
-                   class="btn btn-custom-outline" 
+                <a href="{% url 'service_list' %}"
+                   class="btn btn-custom-outline"
                    style="display: inline-flex; align-items: center; gap: 8px; padding: 0.6rem 1.3rem; font-size: 0.95rem; border-radius: 10px;">
                     <i class="fas fa-arrow-left" style="font-size: 0.85rem;"></i>
                     {{ site_profile.services_back_button_text }}

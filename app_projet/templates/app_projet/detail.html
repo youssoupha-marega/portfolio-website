@@ -7,21 +7,18 @@
 <div class="container-fluid px-3 mt-4">
     <article>
         <h1 class="section-title mb-4" style="font-size: 2.2rem; font-weight: 700; color: #1a202c;">
-            <i class="fas fa-rocket me-2" style="color: #2c5282; font-size: 1.8rem;"></i>
             {{ projet.title|striptags }}
         </h1>
 
         {% include 'includes/content_detail_meta_card.html' with item=projet show_author=site_profile.projects_show_author_detail show_author_profession=site_profile.projects_show_profession_detail show_date=site_profile.projects_show_publish_date_detail show_update_date=site_profile.projects_show_update_date_detail %}
 
-        {% if projet.main_image %}
-        <div class="mb-4" style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
-            <img src="{{ projet.main_image.url }}" alt="{{ projet.title }}" style="width: 100%; height: auto; display: block;">
+        {% include 'includes/detail_hero_media.html' with image=projet.main_image alt=projet.title fit_mode='cover' %}
+
+        {% if projet.resume %}
+        <div class="mb-4">
+            {{ projet.resume|safe }}
         </div>
         {% endif %}
-
-        <div class="mb-4">
-            <p class="lead" style="font-size: 1.15rem; line-height: 1.7; color: #475569;">{{ projet.resume|safe }}</p>
-        </div>
 
         <div style="height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(44, 82, 130, 0.2) 50%, transparent 100%); margin: 2.5rem 0;"></div>
 

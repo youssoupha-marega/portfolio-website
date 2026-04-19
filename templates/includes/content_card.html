@@ -72,13 +72,12 @@ Composant reutilisable pour afficher une carte de contenu (projet, blog, service
         </div>
 
         {% if show_image|default:True and item.main_image %}
-        <div class="card-media" style="position: relative; overflow: hidden; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);">
+        <div class="card-media">
             <img src="{{ item.main_image.url }}"
                  alt="{{ item.title }}"
-                 class="img-fluid"
-                 style="border-radius: 14px; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: block; width: 100%;"
-                 onmouseover="this.style.transform='scale(1.03)'"
-                 onmouseout="this.style.transform='scale(1)'">
+                 class="card-media-img"
+                 loading="lazy"
+                 decoding="async">
         </div>
         {% endif %}
 

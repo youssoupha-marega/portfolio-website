@@ -1,0 +1,16 @@
+{% comment %}
+Hero image reusable across detail pages.
+Default behavior uses cover for a product-style hero.
+Pass fit_mode="contain" for full-visibility cases.
+{% endcomment %}
+
+{% if image %}
+<div class="detail-hero-media{% if fit_mode == 'contain' %} detail-hero-media--contain{% endif %}">
+    <img src="{{ image.url }}"
+         alt="{{ alt|default:'' }}"
+         class="detail-hero-media__img"
+         loading="eager"
+         fetchpriority="high"
+         decoding="async">
+</div>
+{% endif %}
